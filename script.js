@@ -3,24 +3,32 @@ document.getElementById('csvFileInput').addEventListener('change', handleFileSel
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
+        console.log('File selected:', file); // Debugging line
         Papa.parse(file, {
             header: true,
-            skipEmptyLines: true, // Skips empty lines to avoid rendering empty rows
+            skipEmptyLines: true,  // Skips empty lines to avoid rendering issues
             complete: function(results) {
+                console.log('Parsing complete:', results); // Debugging line to check results
                 if (results && results.data && results.data.length > 0) {
                     generateTable(results.data);
                 } else {
                     alert('No data found in CSV file');
+                    console.log('No data found in CSV file'); // Debugging line
                 }
             },
             error: function(error) {
                 alert('Error parsing CSV file: ' + error.message);
+                console.log('Error parsing CSV file:', error); // Debugging line
             }
         });
+    } else {
+        console.log('No file selected'); // Debugging line
     }
 }
 
 function generateTable(data) {
+    console.log('Generating table with data:', data); // Debugging line to verify data
+
     const tableContainer = document.getElementById('tableContainer');
     tableContainer.innerHTML = '';  // Clear previous content
 
@@ -35,7 +43,7 @@ function generateTable(data) {
         th.textContent = header;
         headerRow.appendChild(th);
     });
-    
+
     // Add an extra column for PDF button
     const pdfColumn = document.createElement('th');
     pdfColumn.textContent = 'Generate PDF';
@@ -52,7 +60,7 @@ function generateTable(data) {
             td.textContent = row[header] || '';  // Handle missing/undefined values
             tr.appendChild(td);
         });
-        
+
         // Add PDF generation button for each row
         const pdfBtn = document.createElement('button');
         pdfBtn.textContent = 'Download PDF';
@@ -63,12 +71,14 @@ function generateTable(data) {
 
         tbody.appendChild(tr);
     });
-    
+
     table.appendChild(tbody);
     tableContainer.appendChild(table);
 }
 
 function generatePDF(rowData, headers) {
+    console.log('Generating PDF for row:', rowData); // Debugging line
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
