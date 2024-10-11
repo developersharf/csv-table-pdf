@@ -3,38 +3,32 @@ document.getElementById('csvFileInput').addEventListener('change', handleFileSel
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
-        console.log('File selected:', file); // Debugging line
         Papa.parse(file, {
             header: true,
-            skipEmptyLines: true,  // Skips empty lines to avoid rendering issues
+            skipEmptyLines: true,
             complete: function(results) {
-                console.log('Parsing complete:', results); // Debugging line to check results
                 if (results && results.data && results.data.length > 0) {
                     generateTable(results.data);
                 } else {
-                    alert('No data found in CSV file');
-                    console.log('No data found in CSV file'); // Debugging line
+                    alert('No data found in CSV file.');
                 }
             },
             error: function(error) {
                 alert('Error parsing CSV file: ' + error.message);
-                console.log('Error parsing CSV file:', error); // Debugging line
             }
         });
     } else {
-        console.log('No file selected'); // Debugging line
+        alert('No file selected.');
     }
 }
 
 function generateTable(data) {
-    console.log('Generating table with data:', data); // Debugging line to verify data
-
     const tableContainer = document.getElementById('tableContainer');
     tableContainer.innerHTML = '';  // Clear previous content
 
     const table = document.createElement('table');
     
-    // Create the table headers
+    // Create table headers
     const headers = Object.keys(data[0]);
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
@@ -44,29 +38,30 @@ function generateTable(data) {
         headerRow.appendChild(th);
     });
 
-    // Add an extra column for PDF button
-    const pdfColumn = document.createElement('th');
-    pdfColumn.textContent = 'Generate PDF';
-    headerRow.appendChild(pdfColumn);
+    // Add extra column for "Generate PDF" button
+    const pdfHeader = document.createElement('th');
+    pdfHeader.textContent = 'Generate PDF';
+    headerRow.appendChild(pdfHeader);
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
     // Create table body
     const tbody = document.createElement('tbody');
-    data.forEach((row, rowIndex) => {
+    data.forEach(row => {
         const tr = document.createElement('tr');
         headers.forEach(header => {
             const td = document.createElement('td');
-            td.textContent = row[header] || '';  // Handle missing/undefined values
+            td.textContent = row[header] || '';  // Handle missing values
             tr.appendChild(td);
         });
 
-        // Add PDF generation button for each row
-        const pdfBtn = document.createElement('button');
-        pdfBtn.textContent = 'Download PDF';
-        pdfBtn.addEventListener('click', () => generatePDF(row, headers));
+        // Add "Generate PDF" button for each row
+        const pdfButton = document.createElement('button');
+        pdfButton.textContent = 'Download PDF';
+        pdfButton.addEventListener('click', () => generatePDF(row, headers));
+
         const pdfTd = document.createElement('td');
-        pdfTd.appendChild(pdfBtn);
+        pdfTd.appendChild(pdfButton);
         tr.appendChild(pdfTd);
 
         tbody.appendChild(tr);
@@ -77,8 +72,6 @@ function generateTable(data) {
 }
 
 function generatePDF(rowData, headers) {
-    console.log('Generating PDF for row:', rowData); // Debugging line
-
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
