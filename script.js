@@ -8,6 +8,7 @@ function handleFileSelect(event) {
             skipEmptyLines: true,
             complete: function(results) {
                 if (results && results.data && results.data.length > 0) {
+                    console.log('Parsed Data:', results.data);
                     generateTable(results.data);
                 } else {
                     alert('No data found in CSV file.');
