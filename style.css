@@ -23,3 +23,15 @@ th, td {
     padding: 10px;
     text-align: left;
 }
+
+button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
